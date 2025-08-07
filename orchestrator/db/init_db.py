@@ -1,10 +1,6 @@
-# init_db.py
-import asyncio
-from db.session import engine, Base
+# orchestrator/db/init_db.py
+from orchestrator.db.database import Base, engine
+from orchestrator.db.database import user, project  # Add any models here
 
-async def init_models():
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
-if __name__ == "__main__":
-    asyncio.run(init_models())
+Base.metadata.create_all(bind=engine)
+print("✅ Database tables created successfully.")
