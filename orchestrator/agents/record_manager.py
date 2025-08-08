@@ -1,15 +1,14 @@
-# agents/record_manager.py
-
-from models import MedicalRecord, User
-from db.database import get_db
+from orchestrator.db.models import MedicalRecord
 from sqlalchemy.orm import Session
 from datetime import date
 from typing import List
 
-def add_medical_record(db: Session, user_id: int, medicine: str, dosage: str, timings: List[str], start_date: date, end_date: date):
+def add_medical_record(db: Session, user_id: int, medicine_name: str, dosage: str, timings: List[str], start_date: date, end_date: date):
+    if start_date > end_date:
+        raise ValueError("Start date cannot be after end date.")
     record = MedicalRecord(
         user_id=user_id,
-        medicine=medicine,
+        medicine_name=medicine_name,
         dosage=dosage,
         timings=timings,
         start_date=start_date,
@@ -20,19 +19,22 @@ def add_medical_record(db: Session, user_id: int, medicine: str, dosage: str, ti
     db.refresh(record)
     return record
 
-
 def get_active_medications(db: Session, user_id: int, current_date: date):
-    records = db.query(MedicalRecord).filter(
+    return db.query(MedicalRecord).filter(
         MedicalRecord.user_id == user_id,
         MedicalRecord.start_date <= current_date,
         MedicalRecord.end_date >= current_date
     ).all()
-    return records
-
 
 def delete_medical_record(db: Session, record_id: int):
-    record = db.query(MedicalRecord).get(record_id)
+    record = db.get(MedicalRecord, record_id)
     if record:
         db.delete(record)
         db.commit()
     return record
+
+def get_all_records(db: Session):
+    return db.query(MedicalRecord).all()
+
+def get_record_by_id(db: Session, record_id: int):
+    return db.get(MedicalRecord, record_id)

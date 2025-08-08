@@ -5,8 +5,12 @@ from .agents.registry import list_agents  # New
 
 # Import all agents (auto-register happens here)
 from . import agents  # noqa: F401
+from .routers import record_manager_router
+
 
 app = FastAPI(title="Baymax Orchestrator", version="0.1")
+
+app.include_router(record_manager_router.router)
 
 @app.post("/process", response_model=ProcessResponse)
 async def process_request(request: ProcessRequest):
