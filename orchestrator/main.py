@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from .models.request_models import ProcessRequest, ProcessResponse
-from .router import route_to_agent
+from .routers.router import route_to_agent
 from .agents.registry import list_agents  # New
 
 # Import all agents (auto-register happens here)

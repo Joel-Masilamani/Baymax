@@ -1,5 +1,5 @@
-from .agents.registry import get_agent
-from .models.request_models import ProcessRequest, ProcessResponse
+from ..agents.registry import get_agent
+from ..models.request_models import ProcessRequest, ProcessResponse
 from fastapi import HTTPException
 
 async def route_to_agent(request: ProcessRequest) -> ProcessResponse:
