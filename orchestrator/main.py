@@ -2,14 +2,14 @@ from fastapi import FastAPI
 from .models.request_models import ProcessRequest, ProcessResponse
 from .routers.router import route_to_agent
 from .agents.registry import list_agents  # New
-
+from .routers import medicine_routes
 # Import all agents (auto-register happens here)
 from . import agents  # noqa: F401
 from .routers import record_manager_router
 
 
 app = FastAPI(title="Baymax Orchestrator", version="0.1")
-
+app.include_router(medicine_routes.router)
 app.include_router(record_manager_router.router)
 
 @app.post("/process", response_model=ProcessResponse)
